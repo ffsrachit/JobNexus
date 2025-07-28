@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
 
+
 const registerUser = asyncHandler(async(req,res)=>{
   // inputs from the user
   const{fullname, email ,phoneNumber, password , role } = req.body
@@ -82,7 +83,7 @@ const tokenData = {
    userId : user._id
 }
 
-const token = await jwt.sign(tokenData,process.env.SECRET_KEY , {expiresIn:'1d'});
+const token =  jwt.sign(tokenData,process.env.SECRET_KEY , {expiresIn:'1d'});
 
 
 const loggedinUser = await User.findById(user._id).select("-password -token")
@@ -95,49 +96,49 @@ json(new ApiResponse(200, {user : loggedinUser} , "User Logged in Successfully")
 })
 
 const logoutUser = asyncHandler(async(req, res)=>{
-   const options = {
-      httpOnly:true,
-      secure:true
+
+   const options={
+      httpOnly : true,
+      secure :true
    }
    return res.status(200)
-   .clearcookie("token" , options)
+   .clearCookie("token" , options)
    .json(new ApiResponse(200 , {} , "User logged out"))
 })
 
-const updateProfile =asyncHandler(async(req,res)=>{
- const {fullname , email ,phoneNumber, bio , skills} = req.body
- const file  =req.file
+const updateProfile = asyncHandler(async (req, res) => {
+  const { fullname, email, phoneNumber, bio, skills } = req.body;
+  const file = req.file;
+  const userId = req.id;
 
- if(!fullname || !email || !phoneNumber || !bio || !skills){
-   throw new ApiError(400, "All fields are required")
- }
+  const updateData = {};
 
- const skillsArray = skills.split(",");
- const userId = req.id; // middleware
+  if (fullname) updateData.fullname = fullname;
+  if (email) updateData.email = email;
+  if (phoneNumber) updateData.phoneNumber = phoneNumber;
+  if (bio) updateData["profile.bio"] = bio;
+  if (skills) updateData["profile.skills"] = skills.split(",").map(skill => skill.trim());
 
- const user = await User.findByIdAndUpdate(
-   userId , {
-      $set :{
-fullname : fullname,
-email : email,
- phoneNumber:phoneNumber,
-"profile.bio":bio,
- "profile.skills":skillsArray,
-      }
-   },{
-      new : true
-   }
+  // If no valid fields provided
+  if (Object.keys(updateData).length === 0) {
+    throw new ApiError(400, "No valid fields provided for update");
+  }
 
- ).select("-password");
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: updateData },
+    { new: true }
+  ).select("-password");
 
- if(!user){
-   throw new ApiError(401, "User not found")
- }
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
 
- 
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "Profile updated successfully"));
+});
 
- return res.status(200).json(new ApiResponse(200, {user} ,"Credentials Updated Successfully"))
-})
 
 
 
