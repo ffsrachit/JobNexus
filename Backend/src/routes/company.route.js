@@ -1,7 +1,7 @@
-import {Router} from "express"
-import { getCompany, getCompanybyId, registerCompany , updateCompany } from "../controllers/company.controller.js"
+import { Router } from "express"
+import { getCompany, getCompanybyId, registerCompany, updateCompany } from "../controllers/company.controller.js"
 import isAuthenticated from "../middlewares/auth.middleware.js"
-const router =Router()
+const router = Router()
 
 router.use(isAuthenticated)
 router.route("/register-company").post(registerCompany)
