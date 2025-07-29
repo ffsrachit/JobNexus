@@ -1,7 +1,7 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { Company } from "../models/company.model";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { Company } from "../models/company.model.js";
 
 const registerCompany = asyncHandler(async(req,res)=>{
 
@@ -15,7 +15,7 @@ const registerCompany = asyncHandler(async(req,res)=>{
     const existedcompany = await Company.findOne({name : companyName})
 
     if(existedcompany){
-        throw new ApiError(409, "You can't register same company")
+        throw new ApiError(409, "You cannot register same company")
     }
 
    const company = await Company.create({
@@ -38,7 +38,7 @@ const getCompany = asyncHandler(async(req,res)=>{
     }
 
 
-    return res.status(200).json(new ApiResponse(200,{companies}, ` Total ${companies.length} found`))
+    return res.status(200).json(new ApiResponse(200,{companies}, ` Total ${companies.length} companies found`))
 
 })
 
@@ -54,12 +54,12 @@ const getCompanybyId = asyncHandler(async(req,res)=>{
 })
 
 const updateCompany = asyncHandler(async(req,res)=>{
-    const{name , description , website , location} = req.body;
+    const{companyName , description , website , location} = req.body;
     const file = req.file;
 
     const updateData ={}
 
-    if(name) updateData.name = name;
+    if(companyName) updateData.name = name;
     if(description) updateData.description = description;
     if(website) updateData.website=website;
     if(location) updateData.location=location;
@@ -81,4 +81,4 @@ const updateCompany = asyncHandler(async(req,res)=>{
 })
 
 
-export {registerCompany , getCompany , getCompanybyId}
+export {registerCompany , getCompany , getCompanybyId ,updateCompany}
