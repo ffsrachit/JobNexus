@@ -92,7 +92,7 @@ const loggedinUser = await User.findById(user._id).select("-password -token")
 
 
 return res.status(200).cookie("token" , token , {maxAge:1*24*60*60*1000 , httpOnly:true , sameSite:'strict'}).
-json(new ApiResponse(200, {user : loggedinUser} , "User Logged in Successfully"))
+json(new ApiResponse(200, {user : loggedinUser} , "Welcome Back !"))
 
 })
 
