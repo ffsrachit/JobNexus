@@ -123,7 +123,7 @@ const Login = () => {
 
                     <div className="w-full text-center mt-2 text-sm text-gray-600">
                         Don't have an account?{' '}
-                        <Link to="/signup" className="text-blue-500 hover:underline">
+                        <Link to="/signup" className="text-blue-400 hover:underline">
                             Signup
                         </Link>
                     </div>

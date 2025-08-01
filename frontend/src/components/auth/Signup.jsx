@@ -185,7 +185,7 @@ const dispatch = useDispatch();
 
                     <div className="w-full text-center mt-2 text-sm text-gray-600">
                         Already have an account?{' '}
-                        <Link to="/login" className="text-blue-500 hover:underline">
+                        <Link to="/login" className="text-blue-400 hover:underline">
                             Login
                         </Link>
                     </div>
