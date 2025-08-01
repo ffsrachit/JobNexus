@@ -33,29 +33,54 @@ const Signup = () => {
     }
     const submitHandler = async (e) => {
         e.preventDefault();
+
+        if (!input.fullname) {
+            toast.error("Full name is required");
+            return;
+        }
+
+        if (!input.email) {
+            toast.error("Email is required");
+            return;
+        }
+
+        if (!input.phoneNumber) {
+            toast.error("Phone number is required");
+            return;
+        }
+
+        if (!input.password) {
+            toast.error("Password is required");
+            return;
+        }
+
+        if (!input.role) {
+            toast.error("Role is required");
+            return;
+        }
         const formData = new FormData();
-        formData.append("fullname",input.fullname)
-        formData.append("email",input.email)
-        formData.append("phoneNumber",input.phoneNumber)
-        formData.append("password",input.password)
-        formData.append("role",input.role)
-        if(input.file){
-            formData.append("file",input.file)
+        formData.append("fullname", input.fullname)
+        formData.append("email", input.email)
+        formData.append("phoneNumber", input.phoneNumber)
+        formData.append("password", input.password)
+        formData.append("role", input.role)
+        if (input.file) {
+            formData.append("file", input.file)
         }
         try {
-            const res = await axios.post(`${USER_API_END_POINT}/register` ,formData,{
-                headers:{
-                    "Content-Type":"multipart/form-data"
+            const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
                 },
-                withCredentials:true
+                withCredentials: true
             });
-            if(res.data.success){
+            if (res.data.success) {
                 navigate("/login");
                 toast.success(res.data.message);
             }
         } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.message);
+            console.error("Signup error:", error);
+            toast.error(error?.response?.data?.message || "Registration failed");
         }
     }
     return (
