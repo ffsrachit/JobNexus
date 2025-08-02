@@ -3,8 +3,11 @@ import { Button } from "./ui/button";
 import { Bookmark } from "lucide-react";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const Job = () => {
+    const navigate = useNavigate();
+    const jobId = "dskbvlsnl"
     return (
         <div className='p-6 rounded-2xl bg-gradient-to-br from-white to-blue-50 border border-gray-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition-transform duration-300 ease-in-out cursor-pointer group w-full'>
             <div className="flex items-center justify-between">
@@ -32,19 +35,9 @@ const Job = () => {
             </div>
 
 
-            <div className='flex flex-wrap items-center gap-3 mt-5'>
-                <Badge className='bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full transition-all duration-300 group-hover:bg-blue-200'>
-                    Positions
-                </Badge>
-                <Badge className='bg-red-100 text-red-500 font-semibold px-3 py-1 rounded-full transition-all duration-300 group-hover:bg-red-200'>
-                    Part-Time
-                </Badge>
-                <Badge className='bg-purple-100 text-purple-500 font-semibold px-3 py-1 rounded-full transition-all duration-300 group-hover:bg-purple-200'>
-                    24 LPA
-                </Badge>
-            </div>
+            
             <div className="flex items-center gap-4 mt-4">
-                <Button variant="outline">Details</Button>
+                <Button  variant="outline" onClick={ ()=>navigate(`/description/${jobId}`)}>Details</Button>
                 <Button className='bg-blue-400'>Save For Later</Button>
             </div>
         </div>
