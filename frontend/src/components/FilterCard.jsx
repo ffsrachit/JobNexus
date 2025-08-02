@@ -44,10 +44,12 @@ const FilterCard = () => {
                             <h1 className='font-bold text-lg'>{data.filterType}</h1>
                             {
                                 data.array.map((item, index) => {
+                                      const id = `${data.filterType}-${item}-${index}`; // unique id
                                     return (
-                                        <div className='flex items-center space-x-2 my-2'>
-                                            <RadioGroupItem value={item}/>
-                                            <Label>{item}</Label>
+                                        <div className='flex items-center space-x-2 my-2' key={id}>
+                                            <RadioGroupItem value={item}
+                                            id ={id}/>
+                                            <Label htmlFor={id}>{item}</Label>
                                         </div>
                                     )
                                 })
