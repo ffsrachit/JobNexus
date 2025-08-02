@@ -113,9 +113,9 @@ const Login = () => {
                         loading ? <Button className="w-full my-4 ">
                             <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait
                         </Button> :
-                        <Button type="submit" className="w-full my-4 rounded-xl">
-                        Login
-                    </Button>
+                            <Button type="submit" className="w-full my-4 rounded-xl">
+                                Login
+                            </Button>
                     }
 
 

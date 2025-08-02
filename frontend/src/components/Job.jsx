@@ -6,7 +6,7 @@ import { Badge } from "./ui/badge";
 
 const Job = () => {
     return (
-        <div className="p-5 rounded-md shadow-xl bg-white border border-gray-100">
+        <div className='p-6 rounded-2xl bg-gradient-to-br from-white to-blue-50 border border-gray-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition-transform duration-300 ease-in-out cursor-pointer group w-full'>
             <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-500">2 days ago</p>
                 <Button variant="outline" className="rounded-full" size="icon">
@@ -45,7 +45,7 @@ const Job = () => {
             </div>
             <div className="flex items-center gap-4 mt-4">
                 <Button variant="outline">Details</Button>
-                <Button className= 'bg-blue-400'>Save For Later</Button>
+                <Button className='bg-blue-400'>Save For Later</Button>
             </div>
         </div>
     );

@@ -25,8 +25,8 @@ const Signup = () => {
         file: ""
     });
 
-    const {loading} =useSelector(store=>store.auth);
-const dispatch = useDispatch();
+    const { loading } = useSelector(store => store.auth);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
@@ -87,7 +87,7 @@ const dispatch = useDispatch();
         } catch (error) {
             console.error("Signup error:", error);
             toast.error(error?.response?.data?.message || "Registration failed");
-        } finally{
+        } finally {
             dispatch(setLoading(false));
         }
     }
@@ -178,9 +178,9 @@ const dispatch = useDispatch();
                         loading ? <Button className="w-full my-4 ">
                             <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait
                         </Button> :
-                        <Button type="submit" className="w-full my-4 rounded-xl">
-                       SignUp
-                    </Button>
+                            <Button type="submit" className="w-full my-4 rounded-xl">
+                                SignUp
+                            </Button>
                     }
 
                     <div className="w-full text-center mt-2 text-sm text-gray-600">
