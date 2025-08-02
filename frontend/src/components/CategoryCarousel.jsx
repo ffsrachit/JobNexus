@@ -43,7 +43,9 @@ const CategoryCarousel = () => {
               key={index}
               className="basis-full flex justify-center"
             >
-              <Button className="bg-blue-400 hover:bg-blue-500 text-white rounded-full px-6 py-3 text-base font-medium flex items-center gap-2 shadow-md">
+             <Button className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 hover:scale-105 transition-transform duration-200 text-white rounded-full px-6 py-3 text-base font-medium flex items-center gap-2 shadow-md">
+
+
                 {cat.icon}
                 {cat.title}
               </Button>

@@ -6,7 +6,7 @@ const HeroSection = () => {
     return (
         <div className='text-center'>
             <div className='flex flex-col gap-5 my-10'>
-                <span className=' mx-auto px-4 py-2 rounded-full text-white bg-blue-400 font-medium'>JobNexus - Connect with Opportunities</span>
+                <span className=' bg-gradient-to-r from-blue-400 to-blue-600 mx-auto px-4 py-2 rounded-full text-white bg-blue-400 font-medium'>JobNexus - Connect with Opportunities</span>
                 <h1 className='text-5xl font-bold'>Search, Apply &
                     <br /> Get Your <span className='text-blue-400'>Dream Jobs</span></h1>
                 <p className='text-xl'>Start your journey with us—search for jobs and apply in just a few clicks!</p>
