@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
@@ -12,68 +12,51 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setLoading, setUser } from '@/redux/authSlice'
 import { Loader2 } from 'lucide-react'
 
+
+
 const Login = () => {
     const [input, setInput] = useState({
         email: "",
         password: "",
         role: "",
     })
-    
-    const { loading, user } = useSelector(store => store.auth);
+    const { loading  } = useSelector(store => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
-        setInput({ ...input, [e.target.name]: e.target.value });
+        setInput({ ...input, [e.target.name]: e.target.value }); 
     }
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        
-        if (!input.email || !input.password || !input.role) {
-            toast.error("Please fill all fields");
-            return;
-        }
-        
         try {
             dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                withCredentials: true,
+                withCredentials: true
             });
-            
-            
             if (res.data.success) {
-                console.log('🔍 Setting user:', res.data.data.user); // DEBUG
-                dispatch(setUser(res.data.data.user)); // ✅ Fixed: user is nested in data.data
+
+                dispatch(setUser(res.data.data.user)); 
+                navigate("/");
                 toast.success(res.data.message);
-                
-                // Small delay to ensure state update
-                setTimeout(() => {
-                    navigate("/");
-                }, 100);
             }
         } catch (error) {
-            console.log('🔍 Login error:', error);
-            const errorMessage = error.response?.data?.message || "Login failed";
-            toast.error(errorMessage);
+            console.log(error);
+            toast.error(error.response.data.message);
         } finally {
             dispatch(setLoading(false));
         }
     }
-
-    useEffect(() => {
-        console.log('🔍 useEffect triggered, user:', user); // DEBUG
-        if (user) {
-            navigate("/");
-        }
-    }, [user, navigate]);
-
     return (
         <div className="min-h-screen bg-gradient-to-b from-white via-blue-100 to-blue-200 font-sans">
+
+
             <Navbar />
+
             <div className='flex items-center justify-center max-w-4xl mx-auto my-20'>
                 <form onSubmit={submitHandler} className='w-1/2 border border-gray-200 rounded-4xl p-4 my-10 bg-white shadow-md'>
                     <h1 className='font-extrabold text-4xl mb-5 w-full text-center mt-2 text-blue-400'>Login</h1>
@@ -127,14 +110,18 @@ const Login = () => {
                         </RadioGroup>
                     </div>
 
+
                     {
-                        loading ? <Button className="w-full my-4 " disabled>
+                        loading ? <Button className="w-full my-4 ">
                             <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait
                         </Button> :
                         <Button type="submit" className="w-full my-4 rounded-xl">
-                            Login
-                        </Button>
+                        Login
+                    </Button>
                     }
+
+
+
 
                     <div className="w-full text-center mt-2 text-sm text-gray-600">
                         Don't have an account?{' '}
