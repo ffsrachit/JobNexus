@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
@@ -11,7 +11,7 @@ import axios from 'axios'
 import { setUser } from '@/redux/authSlice'
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
-    const { loading, setLoading } = useState(false);
+    const [loading, setLoading] = useState(false);
     const { user } = useSelector(store => store.auth);
 
     const [input, setInput] = useState({
@@ -49,6 +49,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         }
 
         try {
+            setLoading(true);
             const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -59,9 +60,11 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                 dispatch(setUser(res.data.data.user));
                 toast.success(res.data.message);
             }
-        } catch (error) {                                                                                                                                                  
+        } catch (error) {
             console.log(error);
             toast.error(error.response.data.message);
+        }finally{
+            setLoading(false)
         }
         setOpen(false);
         console.log(input);
@@ -72,14 +75,17 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                 <DialogContent className='sm:max-w-[425px]' onInteractOutside={() => setOpen(false)}>
                     <DialogHeader>
                         <DialogTitle>Update Profile</DialogTitle>
+                        <DialogDescription>
+                            Make changes to your profile here. Click update when you're done.
+                        </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={submitHandler}>
                         <div className='grid gap-4 py-4'>
                             <div className='grid grid-cols-4 items-center gap-4'>
                                 <Label htmlFor="name" className='text-right'>Name</Label>
                                 <Input
-                                    id="name"
-                                    name="name"
+                                    id="fullname"
+                                    name="fullname"
                                     type="text"
                                     value={input.fullname}
                                     onChange={changeEventHandler}
@@ -100,8 +106,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                             <div className='grid grid-cols-4 items-center gap-4'>
                                 <Label htmlFor="number" className='text-right'>Number</Label>
                                 <Input
-                                    id="number"
-                                    name="number"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
                                     value={input.phoneNumber}
                                     onChange={changeEventHandler}
                                     className="col-span-3"
