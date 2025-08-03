@@ -113,6 +113,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const updateProfile = asyncHandler(async (req, res) => {
   const { fullname, email, phoneNumber, bio, skills } = req.body;
+  
   const file = req.file;
 
  
