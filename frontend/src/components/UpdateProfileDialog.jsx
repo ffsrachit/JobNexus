@@ -68,6 +68,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         }
         setOpen(false);
         console.log(input);
+        console.log("Resume URL:", user?.profile?.resume);
     }
     return (
         <div>
