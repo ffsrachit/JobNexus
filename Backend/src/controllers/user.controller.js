@@ -4,6 +4,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -116,7 +118,8 @@ const updateProfile = asyncHandler(async (req, res) => {
   
   const file = req.file;
 
- 
+  const fileUri = getDataUri(file);
+  const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
   const userId = req.id;
 
   const updateData = {};
@@ -127,7 +130,11 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (bio) updateData["profile.bio"] = bio;
   if (skills) updateData["profile.skills"] = skills.split(",").map(skill => skill.trim());
 
+   if(cloudResponse){
+    updateData["profile.resume"] = cloudResponse.secure_url            // save the cloudinary url
+    updateData["profile.resumeOriginalname"] = file.originalname // save the original file name 
 
+   }
  
 
 
