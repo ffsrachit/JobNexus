@@ -34,23 +34,33 @@ const postJob = asyncHandler(async (req, res) => {
 });
 
 const getAllJobs = asyncHandler(async (req, res) => {
-    //filtering the jobs
-
-    const keyword = req.query.keyword || "";                                             // req.query filtering and pagination mein use kiya jaaata hai
-     const query = {
-        $or:[
-            {title : {$regex:keyword , $options:"i"}},
-            {title : {$regex:keyword  , $options :"i"}}
-        ]
-     };
-     const jobs = await Job.find(query).populate({
-        path:"company"
-     }).sort({createdAt:-1})
-
-     if(!jobs){
-        throw new ApiError(404 , "Job not found")
-     }
-     return res.status(200).json(new ApiResponse(200 , jobs , "Job found Successfully"))
+    const keyword = req.query.keyword || "";
+    
+    let query = {};
+    
+    // Only add search conditions if keyword exists
+    if (keyword.trim()) {
+        query = {
+            $or: [
+                { title: { $regex: keyword, $options: "i" } },
+                { description: { $regex: keyword, $options: "i" } }, 
+               
+            ]
+        };
+    }
+    
+    const jobs = await Job.find(query)
+        .populate({
+            path: "company"
+        })
+        .sort({ createdAt: -1 });
+    
+    // Check array length instead of falsy value
+    if (jobs.length === 0) {
+        return res.status(404).json(new ApiResponse(404, [], "No jobs found"));
+    }
+    
+    return res.status(200).json(new ApiResponse(200, jobs, "Jobs found successfully"));
 });
 
 const getJobbyId = asyncHandler(async(req,res)=>{

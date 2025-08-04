@@ -20,6 +20,13 @@ const registerUser = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "All fields are required");
   }
+  
+  const file = req.file;
+  const fileUri = getDataUri(file);
+
+  // const cloudResponse = await cloudinary.uploader.upload(fileUri.content , {
+  //   resource_type:auto
+  // });
 
   // check if user is already exist
 
@@ -41,6 +48,9 @@ const registerUser = asyncHandler(async (req, res) => {
     phoneNumber,
     password: hashedPassword,
     role,
+    // profile:{
+    //   profilePhoto:cloudResponse.secure_url,
+    // }
   });
 
   // storing in this but without password as this will be returned in response
@@ -52,7 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered Successfully"));
+    .json(new ApiResponse(201, createdUser, "User registered Successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
