@@ -68,7 +68,7 @@ const Navbar = () => {
                                     <PopoverContent className='w-80'>
                                         <div className='flex gap-4 space-y-2'>
                                             <Avatar className="cursor-pointer">
-                                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                                <AvatarImage onClick={()=>navigate("/profile")} src="https://github.com/shadcn.png" alt="@shadcn" />
                                             </Avatar>
                                             <div>
                                                 <h4 className='font-medium'>{user?.fullname}</h4>
