@@ -119,9 +119,7 @@ const updateProfile = asyncHandler(async (req, res) => {
   const file = req.file;
 
   const fileUri = getDataUri(file);
-  const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
-  resource_type: "raw"
-});
+  const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
   const userId = req.id;
 
   const updateData = {};
