@@ -2,11 +2,12 @@ import React from 'react'
 import { Badge } from './ui/badge'
 
 
+
 const LatestJobCards = ({ job }) => {
-  
+
     return (
         <div className='p-6 rounded-2xl bg-gradient-to-br from-white to-blue-50 border border-gray-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition-transform duration-300 ease-in-out cursor-pointer group'
-                 >
+               >
 
             {/* Company Info */}
             <div>
