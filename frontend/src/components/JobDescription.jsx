@@ -15,7 +15,7 @@ const JobDescription = () => {
     const { singleJob } = useSelector(store => store.job);
     const { user } = useSelector(store => store.auth);
 
-    const isApplied = singleJob?.application?.some(application => application.applicant === user?.id ) || false;
+    const isApplied = singleJob?.application?.some(application => application.applicant === user?.id) || false;
     const dispatch = useDispatch();
     // custom hook to get single job
     // change to true to test the "Already Applied" state
@@ -97,7 +97,7 @@ const JobDescription = () => {
 
                     <div>
                         <h2 className="font-bold inline">Experience:</h2>
-                        <span className="pl-4 font-normal">{singleJob.experienceLevel}</span>
+                        <span className="pl-4 font-normal">{singleJob?.experienceLevel}</span>
                     </div>
 
                     <div>
@@ -112,14 +112,16 @@ const JobDescription = () => {
 
                     <div>
                         <h2 className="font-bold inline">Posted Date:</h2>
-                        <span className="pl-4 font-normal">{singleJob.createdAt.split("T")[0]}</span>
+                        <span className="pl-4 font-normal">{singleJob?.createdAt.split("T")[0]}</span>
                     </div>
                 </div>
 
                 {/* Requirements Section */}
                 <div className="mt-6">
                     <h2 className="font-bold text-lg mb-2 text-blue-600">Requirements:</h2>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1">{singleJob?.requirements}
+                    <ul className="list-disc list-inside text-gray-700 space-y-1">{singleJob?.requirements?.map((req, i) => (
+                        <li key={i}>{req}</li>
+                    ))}
                     </ul>
                 </div>
             </div>
