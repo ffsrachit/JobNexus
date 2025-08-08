@@ -1,26 +1,58 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { JOB_API_END_POINT } from '@/utils/constant';
+import { setSingleJob } from '@/redux/jobSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const JobDescription = () => {
-    const isApplied = false; // change to true to test the "Already Applied" state
 
+    const isApplied = false;
+    const params = useParams();
+    const jobId = params.id;
+    const {singleJob} =useSelector(store=>store.job);
+    const {user} = useSelector(store=>store.auth);
+    const dispatch = useDispatch();
+    // custom hook to get single job
+    // change to true to test the "Already Applied" state
+    useEffect(() => {
+        const fetchSingleJob = async () => {
+            try {
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, { withCredentials: true });
+                console.log("API Response:", res.data);
+
+                if (res.data.success) {
+
+                    dispatch(setSingleJob(res.data.data));
+                }
+            } catch (error) {
+                console.log("Error fetching jobs:", error);
+                // Handle error case
+                if (error.response) {
+                    console.log("Error response:", error.response.data);
+                }
+            }
+        }
+        fetchSingleJob();
+    }, [jobId, dispatch, user?.id])
     return (
         <div className='max-w-5xl mx-auto my-10 px-4'>
 
             {/* Job Title and Apply Button */}
             <div className='flex items-center justify-between bg-gradient-to-r from-blue-50 via-blue-100 to-purple-50 p-6 rounded-xl shadow-md'>
                 <div>
-                    <h1 className='font-bold text-xl text-gray-800'>Frontend Developer</h1>
+                    <h1 className='font-bold text-xl text-gray-800'>{singleJob?.title}</h1>
                     <div className='flex flex-wrap items-center gap-3 mt-5'>
                         <Badge className='bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full'>
-                            Positions
+                            {singleJob?.position} Position
                         </Badge>
                         <Badge className='bg-red-100 text-red-500 font-semibold px-3 py-1 rounded-full'>
-                            Part-Time
+                            {singleJob?.jobType}
                         </Badge>
                         <Badge className='bg-purple-100 text-purple-500 font-semibold px-3 py-1 rounded-full'>
-                            24 LPA
+                           {Math.round(singleJob?.salary / 100000)} LPA
                         </Badge>
                     </div>
                 </div>
@@ -46,57 +78,46 @@ const JobDescription = () => {
                 <div className="space-y-4 text-gray-800">
                     <div>
                         <h2 className="font-bold inline">Role:</h2>
-                        <span className="pl-4 font-normal">Frontend Developer</span>
+                        <span className="pl-4 font-normal">{singleJob?.title}</span>
                     </div>
 
                     <div>
                         <h2 className="font-bold inline">Location:</h2>
-                        <span className="pl-4 font-normal">Pune, India</span>
+                        <span className="pl-4 font-normal">{singleJob?.location}</span>
                     </div>
 
                     <div>
                         <h2 className="font-bold inline">Description:</h2>
                         <span className="pl-4 font-normal">
-                            We’re looking for a motivated Frontend Developer with no prior professional
-                            experience to join our team. This entry-level position is perfect for recent
-                            graduates or self-taught developers eager to start their career in web
-                            development. You will work closely with senior developers to build and maintain
-                            user-friendly web interfaces.
+                            {singleJob?.description}
                         </span>
                     </div>
 
                     <div>
                         <h2 className="font-bold inline">Experience:</h2>
-                        <span className="pl-4 font-normal">0 yrs</span>
+                        <span className="pl-4 font-normal">{singleJob.experienceLevel}</span>
                     </div>
 
                     <div>
                         <h2 className="font-bold inline">Salary:</h2>
-                        <span className="pl-4 font-normal">28 LPA</span>
+                        <span className="pl-4 font-normal">{Math.round(singleJob?.salary / 100000)} LPA</span>
                     </div>
 
                     <div>
                         <h2 className="font-bold inline">Total Applicants:</h2>
-                        <span className="pl-4 font-normal">10</span>
+                        <span className="pl-4 font-normal">{singleJob?.application?.length}</span>
                     </div>
 
                     <div>
                         <h2 className="font-bold inline">Posted Date:</h2>
-                        <span className="pl-4 font-normal">08-03-2025</span>
+                        <span className="pl-4 font-normal">{singleJob.createdAt.split("T")[0]}</span>
                     </div>
                 </div>
 
                 {/* Requirements Section */}
                 <div className="mt-6">
                     <h2 className="font-bold text-lg mb-2 text-blue-600">Requirements:</h2>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Basic understanding of HTML, CSS, and JavaScript.</li>
-                        <li>Familiarity with frontend frameworks like React, Angular, or Vue.</li>
-                        <li>Eagerness to learn and grow in a professional environment.</li>
-                        <li>Good problem-solving skills and attention to detail.</li>
-                        <li>Ability to work collaboratively in a team.</li>
-                        <li>Basic knowledge of version control systems like Git.</li>
-                        <li>Strong communication skills.</li>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1">{singleJob?.requirements}
                     </ul>
                 </div>
             </div>

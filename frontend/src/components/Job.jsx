@@ -8,10 +8,22 @@ import { useNavigate } from "react-router-dom";
 const Job = ({ job }) => {
     const navigate = useNavigate();
     // const jobId = "dskbvlsnl"
+    const daysAgoFunction = (mongodbTime) => {
+        const createdAt = new Date(mongodbTime);
+        const currentTime = new Date();
+
+        const TimeDifference = currentTime - createdAt
+        return Math.floor(TimeDifference / (1000 * 24 * 60 * 60));
+
+    }
     return (
         <div className='p-6 rounded-2xl bg-gradient-to-br from-white to-blue-50 border border-gray-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition-transform duration-300 ease-in-out cursor-pointer group w-full'>
             <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-500">2 days ago</p>
+                <p className="text-sm text-gray-500">
+                    {daysAgoFunction(job?.createdAt) === 0
+                        ? "Today"
+                        : `${daysAgoFunction(job?.createdAt)} days ago`}
+                </p>
                 <Button variant="outline" className="rounded-full" size="icon">
                     <Bookmark />
                 </Button>
@@ -48,8 +60,8 @@ const Job = ({ job }) => {
 
 
             <div className="flex items-center gap-4 mt-4">
-                <Button variant="outline" onClick={() => navigate(`/description/${job._id}`)}>Details</Button>
-                <Button className='bg-blue-400'>Save For Later</Button>
+                <Button className='cursor-pointer' variant="outline" onClick={() => navigate(`/description/${job._id}`)}>Details</Button>
+                <Button className='bg-blue-400 cursor-pointer'>Save For Later</Button>
             </div>
         </div>
     );

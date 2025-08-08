@@ -1,10 +1,13 @@
 import React from 'react'
 import { Badge } from './ui/badge'
+import { useNavigate } from 'react-router-dom'
 
-const LatestJobCards = ({job}) => {
+const LatestJobCards = ({ job }) => {
+    const navigate = useNavigate();
     return (
-        <div className='p-6 rounded-2xl bg-gradient-to-br from-white to-blue-50 border border-gray-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition-transform duration-300 ease-in-out cursor-pointer group'>
-            
+        <div className='p-6 rounded-2xl bg-gradient-to-br from-white to-blue-50 border border-gray-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition-transform duration-300 ease-in-out cursor-pointer group'
+            onClick={() => navigate(`/description/${job._id}`)}       >
+
             {/* Company Info */}
             <div>
                 <h1 className='font-semibold text-xl text-gray-800 group-hover:text-blue-600 transition-colors duration-300'>{job?.company?.name}</h1>
@@ -25,10 +28,10 @@ const LatestJobCards = ({job}) => {
                     {job?.position} Postions
                 </Badge>
                 <Badge className='bg-red-100 text-red-500 font-semibold px-3 py-1 rounded-full transition-all duration-300 group-hover:bg-red-200'>
-                   {job?.jobType}
+                    {job?.jobType}
                 </Badge>
                 <Badge className='bg-purple-100 text-purple-500 font-semibold px-3 py-1 rounded-full transition-all duration-300 group-hover:bg-purple-200'>
-                   {Math.round(job?.salary / 100000)} LPA
+                    {Math.round(job?.salary / 100000)} LPA
                 </Badge>
             </div>
         </div>
