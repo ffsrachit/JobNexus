@@ -9,11 +9,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const JobDescription = () => {
 
-    const isApplied = false;
+
     const params = useParams();
     const jobId = params.id;
-    const {singleJob} =useSelector(store=>store.job);
-    const {user} = useSelector(store=>store.auth);
+    const { singleJob } = useSelector(store => store.job);
+    const { user } = useSelector(store => store.auth);
+
+    const isApplied = singleJob?.application?.some(application => application.applicant === user?.id ) || false;
     const dispatch = useDispatch();
     // custom hook to get single job
     // change to true to test the "Already Applied" state
@@ -52,7 +54,7 @@ const JobDescription = () => {
                             {singleJob?.jobType}
                         </Badge>
                         <Badge className='bg-purple-100 text-purple-500 font-semibold px-3 py-1 rounded-full'>
-                           {Math.round(singleJob?.salary / 100000)} LPA
+                            {Math.round(singleJob?.salary / 100000)} LPA
                         </Badge>
                     </div>
                 </div>
