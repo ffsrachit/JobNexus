@@ -17,22 +17,22 @@ const JobDescription = () => {
     const { user } = useSelector(store => store.auth);
 
     const isInitallyApplied = singleJob?.application?.some(application => application.applicant == user?._id) || false;
-    const[isApplied,setisApplied] =useState(isInitallyApplied);
+    const [isApplied, setisApplied] = useState(isInitallyApplied);
 
     const dispatch = useDispatch();
     // custom hook to get single job
     // change to true to test the "Already Applied" state
 
 
-    const applyJobHandler = async() =>{
+    const applyJobHandler = async () => {
         try {
-            const res = await axios.post(`${APPLICATION_API_END_POINT}/applyjob/${jobId}`, {}, {withCredentials:true});
-            if(res.data.success){
-                
+            const res = await axios.post(`${APPLICATION_API_END_POINT}/applyjob/${jobId}`, {}, { withCredentials: true });
+            if (res.data.success) {
+
                 setisApplied(true)  // update the local state
-               const updateSingleJob = {...singleJob,application:[...singleJob.application,{applicant:user?._id}]}
-               dispatch(setSingleJob(updateSingleJob)); // real time update ui
-               toast.success(res.data.message)
+                const updateSingleJob = { ...singleJob, application: [...singleJob.application, { applicant: user?._id }] }
+                dispatch(setSingleJob(updateSingleJob)); // real time update ui
+                toast.success(res.data.message)
 
             }
         } catch (error) {
@@ -49,7 +49,7 @@ const JobDescription = () => {
                 if (res.data.success) {
 
                     dispatch(setSingleJob(res.data.data));
-                    setisApplied(res.data.data.job.application.some(application=>application.applicant == user?._id))
+                    setisApplied(res.data.data.job.application.some(application => application.applicant == user?._id))
                 }
             } catch (error) {
                 console.log("Error fetching jobs:", error);
@@ -82,7 +82,7 @@ const JobDescription = () => {
                 </div>
 
                 <Button
-                onClick={isApplied ? null : applyJobHandler}
+                    onClick={isApplied ? null : applyJobHandler}
                     disabled={isApplied}
                     className={`rounded-3xl px-6 py-2 font-semibold transition-all duration-300 transform
                     ${isApplied
