@@ -39,11 +39,21 @@ const Navbar = () => {
                     <h1 className='text-2xl font-bold'>Job<span className='text-blue-400'>Nexus</span></h1>
                 </div>
                 <div className='flex items-center gap-16'>
-                    <ul className='flex font-medium items-center gap-5'>
-                        <li><Link to='/'>Home</Link></li>
-                        <li><Link to='/jobs'>Jobs</Link></li>
-                        <li><Link to='/browse'>Browse</Link></li>
+                    <ul className="flex font-medium items-center gap-5">
+                        {user && user?.role === "Recruiter" ? (
+                            <>
+                                <li><Link to="/admin/companies">Companies</Link></li>
+                                <li><Link to="/admin/jobs">Jobs</Link></li>
+                            </>
+                        ) : (
+                            <>
+                                <li><Link to="/">Home</Link></li>
+                                <li><Link to="/jobs">Jobs</Link></li>
+                                <li><Link to="/browse">Browse</Link></li>
+                            </>
+                        )}
                     </ul>
+
                     {
                         !user ? (
                             <div className='flex items-center gap-2'>
@@ -68,7 +78,7 @@ const Navbar = () => {
                                     <PopoverContent className='w-80'>
                                         <div className='flex gap-4 space-y-2'>
                                             <Avatar className="cursor-pointer">
-                                                <AvatarImage onClick={()=>navigate("/profile")} src={user?.profile?.profilePhoto} alt="@shadcn" />
+                                                <AvatarImage onClick={() => navigate("/profile")} src={user?.profile?.profilePhoto} alt="@shadcn" />
                                             </Avatar>
                                             <div>
                                                 <h4 className='font-medium'>{user?.fullname}</h4>
@@ -80,13 +90,16 @@ const Navbar = () => {
                                         </div>
 
                                         <div className='flex flex-col text-gray-600 my-2'>
-                                            <div className='flex w-fit items-center gap-2 cursor-pointer'>
-                                                <User2 />
-                                                <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
-                                            </div>
+                                            {
+                                                user && user?.role === "Student" && (<div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                    <User2 />
+                                                    <Button variant="link"><Link to='/profile'>View Profile</Link></Button>
+                                                </div>)
+                                            }
+
 
                                             <div className='flex w-fit items-center gap-2 cursor-pointer'>
-                                                <LogOut/>
+                                                <LogOut />
                                                 <Button className='cursor-pointer' onClick={logoutHandler} variant="link">Logout</Button>
                                             </div>
                                         </div>
