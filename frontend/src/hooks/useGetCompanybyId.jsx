@@ -14,7 +14,7 @@ const useGetCompanybyId = (companyId) => {
                 
                 if(res.data.success){
                     
-                    dispatch(setSingleCompany(res.data.data.company));
+                    dispatch(setSingleCompany(res.data.data));
                 }
             } catch (error) {
                 console.log("Error fetching jobs:", error);

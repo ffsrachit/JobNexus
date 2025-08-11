@@ -19,7 +19,7 @@ const CompanySetup = () => {
         location: "",
         file: null
     });
-    const { singleCompany = {} } = useSelector(store => store.company || {});
+   const {singleCompany} = useSelector(store=>store.company);
     const [loading, setLoading] = useState(false);
     const params = useParams();
     const navigate = useNavigate();
@@ -55,8 +55,8 @@ const CompanySetup = () => {
                 withCredentials: true
             });
 
-            if (res?.data?.success) {
-                toast.success(res?.data?.message);
+            if (res.data.success) {
+                toast.success(res.data.message);
                 navigate("/admin/companies");
             }
         } catch (error) {
@@ -72,10 +72,10 @@ const CompanySetup = () => {
         if (singleCompany && Object.keys(singleCompany).length > 0) {
             console.log('Setting input with company data:', singleCompany);
             setInput({
-                name: singleCompany?.name || "",
-                description: singleCompany?.description || "",
-                website: singleCompany?.website || "",
-                location: singleCompany?.location || "",
+                name: singleCompany.name || "",
+                description: singleCompany.description || "",
+                website: singleCompany.website || "",
+                location: singleCompany.location || "",
                 file: null // Don't pre-fill file input for security reasons
             });
         }
