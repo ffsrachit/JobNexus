@@ -18,7 +18,7 @@ const CompanySetup = () => {
         location: "",
         file: null
     });
-    const { singleCompany } = useSelector(store => store.company)
+    const { singleCompany = {} } = useSelector(store => store.company || {});
     const [loading, setLoading] = useState(false);
     const params = useParams();
     const navigate = useNavigate();
@@ -63,14 +63,15 @@ const CompanySetup = () => {
     }
 
     useEffect(() => {
+        // Use optional chaining to safely access properties
         setInput({
-            name: singleCompany.name || "",
-            description: singleCompany.description || "",
-            website: singleCompany.website || "",
-            location: singleCompany.location || "",
-            file: singleCompany.file || null
+            name: singleCompany?.name || "" ,
+            description: singleCompany?.description || "",
+            website: singleCompany?.website ||  "",
+            location:  singleCompany?.location || "",
+            file:  singleCompany?.file || null
         })
-    }, [singleCompany])
+    },[singleCompany])
     return (
         <div>
             <Navbar />
