@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import useGetCompanybyId from '@/hooks/useGetCompanybyId'
 
 const CompanySetup = () => {
     const [input, setInput] = useState({
@@ -23,6 +24,9 @@ const CompanySetup = () => {
     const params = useParams();
     const navigate = useNavigate();
 
+    // ADD THIS LINE - Use the custom hook to fetch company data
+    useGetCompanybyId(params.id);
+
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     }
@@ -31,6 +35,7 @@ const CompanySetup = () => {
         const file = e.target.files?.[0];
         setInput({ ...input, file });
     }
+    
     const submitHandler = async (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -63,19 +68,23 @@ const CompanySetup = () => {
     }
 
     useEffect(() => {
-        // Use optional chaining to safely access properties
-        setInput({
-            name: singleCompany?.name || "" ,
-            description: singleCompany?.description || "",
-            website: singleCompany?.website ||  "",
-            location:  singleCompany?.location || "",
-            file:  singleCompany?.file || null
-        })
-    },[singleCompany])
+        // Only update input if singleCompany has data
+        if (singleCompany && Object.keys(singleCompany).length > 0) {
+            console.log('Setting input with company data:', singleCompany);
+            setInput({
+                name: singleCompany?.name || "",
+                description: singleCompany?.description || "",
+                website: singleCompany?.website || "",
+                location: singleCompany?.location || "",
+                file: null // Don't pre-fill file input for security reasons
+            });
+        }
+    }, [singleCompany])
+
     return (
         <div>
             <Navbar />
-            <div className='max-w-xl mx-auto my-18'>
+            <div className='max-w-xl mx-auto my-8'>
                 <form onSubmit={submitHandler}>
                     <div className='flex items-center gap-5 p-8'>
                         <Button onClick={() => navigate("/admin/companies")} variant="outline" className='flex items-center gap-2 text-gray-500 font-semibold'>
@@ -99,7 +108,6 @@ const CompanySetup = () => {
                                 value={input.description}
                                 onChange={changeEventHandler} />
                         </div>
-
                         <div>
                             <Label>Website</Label>
                             <Input type='text'
@@ -118,23 +126,18 @@ const CompanySetup = () => {
                             <Label>Logo</Label>
                             <Input type='file'
                                 accept="image/*"
-
                                 onChange={changeFileHandler} />
                         </div>
-
                     </div>
 
-
                     {
-                        loading ? <Button className="w-full my-4 ">
+                        loading ? <Button className="w-full my-4">
                             <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait
                         </Button> :
                             <Button type="submit" className="w-full my-4 rounded-xl">
                                 Update
                             </Button>
                     }
-
-
                 </form>
             </div>
         </div>
