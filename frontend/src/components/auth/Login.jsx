@@ -20,12 +20,12 @@ const Login = () => {
         password: "",
         role: "",
     })
-    const { loading  } = useSelector(store => store.auth);
+    const { loading } = useSelector(store => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
-        setInput({ ...input, [e.target.name]: e.target.value }); 
+        setInput({ ...input, [e.target.name]: e.target.value });
     }
 
     const submitHandler = async (e) => {
@@ -40,7 +40,7 @@ const Login = () => {
             });
             if (res.data.success) {
 
-                dispatch(setUser(res.data.data.user)); 
+                dispatch(setUser(res.data.data.user));
                 navigate("/");
                 toast.success(res.data.message);
             }
@@ -115,9 +115,9 @@ const Login = () => {
                         loading ? <Button className="w-full my-4 ">
                             <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait
                         </Button> :
-                        <Button type="submit" className="w-full my-4 rounded-xl">
-                        Login
-                    </Button>
+                            <Button type="submit" className="w-full my-4 rounded-xl">
+                                Login
+                            </Button>
                     }
 
 

@@ -8,12 +8,18 @@ import axios from 'axios'
 import { COMPANY_API_END_POINT } from '@/utils/constant'
 import { useDispatch } from 'react-redux'
 import { toast } from 'sonner'
+import { setSingleCompany } from '@/redux/companySlice'
 
 const CompanyCreate = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [companyName, setcompanyName] = useState();
+    const [companyName, setcompanyName] = useState("");
     const registerNewCompany = async () => {
+        if (!companyName.trim()) {
+            toast.error("Please enter a company name");
+            return;
+        }
+
         try {
             const res = await axios.post(`${COMPANY_API_END_POINT}/register-company`, { companyName }, {
                 headers: {
@@ -22,12 +28,13 @@ const CompanyCreate = () => {
                 withCredentials: true
             })
             if (res?.data?.success) {
+                dispatch(setSingleCompany(res.data.data.company))
                 toast.success(res.data.message);
-                const companyId = res?.data?.company?._id
+                const companyId = res?.data?.data?.company?._id;
                 navigate(`/admin/companies/${companyId}`)
             }
         } catch (error) {
-
+            toast.error(error.response?.data?.message || "Something went wrong");
         }
     }
     return (
