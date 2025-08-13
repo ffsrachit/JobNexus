@@ -5,102 +5,121 @@ import { Job } from "../models/job.model.js";
 import { Company } from "../models/company.model.js";
 
 const postJob = asyncHandler(async (req, res) => {
-    const {
-        title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
-    const userId = req.id;
+  const {
+    title,
+    description,
+    requirements,
+    salary,
+    location,
+    jobType,
+    experience,
+    position,
+    companyId,
+  } = req.body;
+  const userId = req.id;
 
-    if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
-        throw new ApiError(400, "All fields are required");
-    }
+  if (
+    !title ||
+    !description ||
+    !requirements ||
+    !salary ||
+    !location ||
+    !jobType ||
+    !experience ||
+    !position ||
+    !companyId
+  ) {
+    throw new ApiError(400, "All fields are required");
+  }
 
-    const existedCompany = await Company.findById(companyId)
-    if (!existedCompany) {
-        throw new ApiError(400, "Comapny not exist")
-    }
-    const job = await Job.create({
-        title,
-        description,
-        requirements: requirements.split(","),
-        salary: Number(salary),
-        location,
-        jobType,
-        experienceLevel: experience,
-        position,
-        company: companyId,
-        createdby: userId,
-    });
+  const existedCompany = await Company.findById(companyId);
+  if (!existedCompany) {
+    throw new ApiError(400, "Comapny not exist");
+  }
+  const job = await Job.create({
+    title,
+    description,
+    requirements: requirements.split(","),
+    salary: Number(salary),
+    location,
+    jobType,
+    experienceLevel: experience,
+    position,
+    company: companyId,
+    createdby: userId,
+  });
 
-    return res.status(201).json(new ApiResponse(201, job, "Job created Successfully"))
+  return res
+    .status(201)
+    .json(new ApiResponse(201, job, "Job created Successfully"));
 });
 
 const getAllJobs = asyncHandler(async (req, res) => {
-    const keyword = req.query.keyword || "";
-    
-    let query = {};
-    
-    // Only add search conditions if keyword exists
-    if (keyword.trim()) {
-        query = {
-            $or: [
-                { title: { $regex: keyword, $options: "i" } },
-                { description: { $regex: keyword, $options: "i" } }, 
-               
-            ]
-        };
-    }
-    
-    const jobs = await Job.find(query)
-        .populate({
-            path: "company"
-        })
-        .sort({ createdAt: -1 });
-    
-    // Check array length instead of falsy value
-    if (jobs.length === 0) {
-        return res.status(404).json(new ApiResponse(404, [], "No jobs found"));
-    }
-    
-    return res.status(200).json(new ApiResponse(200, jobs, "Jobs found successfully"));
+  const keyword = req.query.keyword || "";
+
+  let query = {};
+
+  // Only add search conditions if keyword exists
+  if (keyword.trim()) {
+    query = {
+      $or: [
+        { title: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    };
+  }
+
+  const jobs = await Job.find(query)
+    .populate({
+      path: "company",
+    })
+    .sort({ createdAt: -1 });
+
+  // Check array length instead of falsy value
+  if (jobs.length === 0) {
+    return res.status(404).json(new ApiResponse(404, [], "No jobs found"));
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, jobs, "Jobs found successfully"));
 });
 
-const getJobbyId = asyncHandler(async(req,res)=>{
-    const JobId = req.params.id;
+const getJobbyId = asyncHandler(async (req, res) => {
+  const JobId = req.params.id;
 
-    const job = await Job.findById(JobId).populate({
-        path:"application"
+  const job = await Job.findById(JobId).populate({
+    path: "application",
+  });
+
+  if (!job) {
+    throw new ApiError(404, "Job not found");
+  }
+  return res.status(200).json(new ApiResponse(200, job));
+});
+
+const getAdminJobs = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.id;
+
+    if (!userId) {
+      throw new ApiError(400, "User ID not found");
+    }
+
+    const jobs = await Job.find({ createdby: userId }).populate({
+      path: "company",
     });
-
-    if(!job){
-        throw new ApiError(404, "Job not found")
+    if (!jobs) {
+      throw new ApiError("No Jobs found");
     }
-   return res.status(200).json(new ApiResponse(200, job))
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
+  } catch (error) {
+    console.error("Error in getAdminJobs:", error);
+    throw error;
+  }
 });
 
-const getAdminJobs = asyncHandler(async(req,res)=>{
-    try {
-        const userId = req.id;
-        
-        if(!userId){
-            throw new ApiError(400, "User ID not found")
-        }
-        
-       
-        const jobs = await Job.find({createdby: userId})
-        .populate({
-            path: 'company'
-        }); 
-        if(!jobs){
-            throw new ApiError("No Jobs found")
-        }
-        
-       
-        return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
-        
-    } catch (error) {
-        console.error("Error in getAdminJobs:", error);
-        throw error;
-    }
-});
-
-
-export { postJob , getAllJobs , getJobbyId , getAdminJobs };
+export { postJob, getAllJobs, getJobbyId, getAdminJobs };
