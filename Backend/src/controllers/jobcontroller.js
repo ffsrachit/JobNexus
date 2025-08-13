@@ -77,16 +77,30 @@ const getJobbyId = asyncHandler(async(req,res)=>{
 });
 
 const getAdminJobs = asyncHandler(async(req,res)=>{
-    const userId = req.id;
-    const jobs = await Job.find({createdby:userId})
-
-    if(!jobs){
-        throw new ApiError(404, "Jobs not found")
+    try {
+        const userId = req.id;
+        
+        if(!userId){
+            throw new ApiError(400, "User ID not found")
+        }
+        
+       
+        const jobs = await Job.find({createdby: userId})
+        .populate({
+            path: 'company'
+        }); 
+        if(!jobs){
+            throw new ApiError("No Jobs found")
+        }
+        
+       
+        return res.status(200).json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
+        
+    } catch (error) {
+        console.error("Error in getAdminJobs:", error);
+        throw error;
     }
-
-    return res.status(200).json(new ApiResponse(200,jobs));
-})
-
+});
 
 
 export { postJob , getAllJobs , getJobbyId , getAdminJobs };
