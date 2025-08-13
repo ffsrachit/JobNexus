@@ -10,7 +10,7 @@ const postJob = asyncHandler(async (req, res) => {
     const userId = req.id;
 
     if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
-        throw new ApiError(404, "All fields are required");
+        throw new ApiError(400, "All fields are required");
     }
 
     const existedCompany = await Company.findById(companyId)
