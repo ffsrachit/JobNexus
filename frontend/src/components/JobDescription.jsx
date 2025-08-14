@@ -9,37 +9,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 
 const JobDescription = () => {
-
-
     const params = useParams();
     const jobId = params.id;
     const { singleJob } = useSelector(store => store.job);
     const { user } = useSelector(store => store.auth);
 
-    const isInitallyApplied = singleJob?.application?.some(application => application.applicant == user?._id) || false;
-    const [isApplied, setisApplied] = useState(isInitallyApplied);
+    const isInitiallyApplied = singleJob?.application?.some(application => application.applicant === user?._id) || false;
+    const [isApplied, setIsApplied] = useState(isInitiallyApplied);
 
     const dispatch = useDispatch();
-    // custom hook to get single job
-    // change to true to test the "Already Applied" state
-
 
     const applyJobHandler = async () => {
         try {
             const res = await axios.post(`${APPLICATION_API_END_POINT}/applyjob/${jobId}`, {}, { withCredentials: true });
             if (res.data.success) {
-
-                setisApplied(true)  // update the local state
-                const updateSingleJob = { ...singleJob, application: [...singleJob.application, { applicant: user?._id }] }
-                dispatch(setSingleJob(updateSingleJob)); // real time update ui
-                toast.success(res.data.message)
-
+                setIsApplied(true);
+                const updatedSingleJob = {
+                    ...singleJob,
+                    application: [...singleJob.application, { applicant: user?._id }]
+                };
+                dispatch(setSingleJob(updatedSingleJob));
+                toast.success(res.data.message);
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response?.data?.message || 'Something went wrong')
+            toast.error(error.response?.data?.message || 'Something went wrong');
         }
-    }
+    };
+
     useEffect(() => {
         const fetchSingleJob = async () => {
             try {
@@ -47,20 +44,22 @@ const JobDescription = () => {
                 console.log("API Response:", res.data);
 
                 if (res.data.success) {
-
-                    dispatch(setSingleJob(res.data.data));
-                    setisApplied(res.data.data.job.application.some(application => application.applicant == user?._id))
+                    // Fix the data structure access based on your API response
+                    const jobData = res.data.data || res.data.job;
+                    dispatch(setSingleJob(jobData));
+                    setIsApplied(jobData.application?.some(application => application.applicant === user?._id) || false);
                 }
             } catch (error) {
-                console.log("Error fetching jobs:", error);
-                // Handle error case
+                console.log("Error fetching job:", error);
                 if (error.response) {
                     console.log("Error response:", error.response.data);
                 }
             }
-        }
+        };
         fetchSingleJob();
-    }, [jobId, dispatch, user?.id])
+    }, [jobId, dispatch, user?._id]); // Fixed dependency
+
+    // Rest of your JSX remains the same...
     return (
         <div className='max-w-5xl mx-auto my-10 px-4'>
 
