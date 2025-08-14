@@ -35,13 +35,14 @@ const getCompany = asyncHandler(async(req,res)=>{
 
     const companies = await Company.find({userId});
 
-    if(companies.length==0){
-        throw new ApiError(404 , "No companies found")
-    }
-
-
-    return res.status(200).json(new ApiResponse(200,{companies}, ` Total ${companies.length} companies found`))
-
+    // ✅ Return empty array instead of throwing error
+    return res.status(200).json(
+        new ApiResponse(200, {companies}, 
+            companies.length === 0 
+                ? "No companies found" 
+                : `Total ${companies.length} companies found`
+        )
+    )
 })
 
 const getCompanybyId = asyncHandler(async(req,res)=>{
