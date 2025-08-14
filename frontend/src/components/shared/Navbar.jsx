@@ -78,8 +78,17 @@ const Navbar = () => {
                                     <PopoverContent className='w-80'>
                                         <div className='flex gap-4 space-y-2'>
                                             <Avatar className="cursor-pointer">
-                                                <AvatarImage onClick={() => navigate("/profile")} src={user?.profile?.profilePhoto} alt="@shadcn" />
+                                                <AvatarImage
+                                                    src={user?.profile?.profilePhoto}
+                                                    alt="@shadcn"
+                                                    onClick={
+                                                        user?.role === "Student"
+                                                            ? () => navigate("/profile")
+                                                            : undefined
+                                                    }
+                                                />
                                             </Avatar>
+
                                             <div>
                                                 <h4 className='font-medium'>{user?.fullname}</h4>
                                                 <p className='text-sm text-muted-foreground'>{user?.profile?.bio}</p>

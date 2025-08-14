@@ -44,7 +44,7 @@ const JobDescription = () => {
                 console.log("API Response:", res.data);
 
                 if (res.data.success) {
-                   
+
                     const jobData = res.data.data || res.data.job;
                     dispatch(setSingleJob(jobData));
                     setIsApplied(jobData.application?.some(application => application.applicant === user?._id) || false);
@@ -59,7 +59,7 @@ const JobDescription = () => {
         fetchSingleJob();
     }, [jobId, dispatch, user?._id]);
 
-   
+
     return (
         <div className='max-w-5xl mx-auto my-10 px-4'>
 
