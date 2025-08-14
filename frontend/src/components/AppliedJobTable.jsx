@@ -9,10 +9,11 @@ import {
   TableRow
 } from './ui/table';
 import { Badge } from './ui/badge';
-
-const jobs = [1,2,3,4,5];
+import { useSelector } from 'react-redux';
 
 const AppliedJobTable = () => {
+  const { allAppliedJobs } = useSelector(store => store.job || {});
+  
   return (
     <div className='bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 p-10 rounded-2xl shadow-xl border border-blue-200'>
       <Table>
@@ -26,24 +27,20 @@ const AppliedJobTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {jobs.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={4} className=" text-2xl text-center py-4 text-gray-500">
-                You haven't applied to any jobs yet
-              </TableCell>
-            </TableRow>
-          ) : (
-            jobs.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>8-3-2025</TableCell>
-                <TableCell>FrontEnd Developer</TableCell>
-                <TableCell>Google</TableCell>
-                <TableCell className='text-right'>
-                  <Badge>Selected</Badge>
-                </TableCell>
+          {
+            (!allAppliedJobs || allAppliedJobs.length <= 0) ? (
+              <TableRow>
+                <TableCell colSpan={4}>You haven't applied to any job yet</TableCell>
+              </TableRow>
+            ) : allAppliedJobs.map((appliedJob) => (
+              <TableRow key={appliedJob._id}>
+                <TableCell>{appliedJob.createdAt.split("T")[0]}</TableCell>
+                <TableCell>{appliedJob.job.title}</TableCell>
+                <TableCell>{appliedJob?.job?.company?.name}</TableCell>
+                <TableCell className='text-right'><Badge className={`${appliedJob.status === "rejected" ? 'bg-red-400' : appliedJob.status ==="pending" ? 'bg-gray-400' : 'text-green-700 bg-green-200'}`}>{appliedJob.status}</Badge></TableCell>
               </TableRow>
             ))
-          )}
+          }
         </TableBody>
       </Table>
     </div>

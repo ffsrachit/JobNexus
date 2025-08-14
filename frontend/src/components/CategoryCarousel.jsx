@@ -17,6 +17,9 @@ import {
   CarouselPrevious
 } from './ui/carousel';
 import { Button } from './ui/button';
+import { setSearchedQuery } from '@/redux/jobSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
   { title: 'Frontend Developer', icon: <Code size={18} /> },
@@ -30,6 +33,12 @@ const categories = [
 ];
 
 const CategoryCarousel = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const searchJobHandler = (query) => {
+          dispatch(setSearchedQuery(query.title))
+          navigate("/browse");
+      }
   return (
     <div className="bg-blue-50 rounded-3xl py-10 px-6 max-w-md mx-auto my-16 shadow-md relative">
       <h2 className="text-center text-2xl font-bold text-blue-900 mb-8">
@@ -43,7 +52,7 @@ const CategoryCarousel = () => {
               key={index}
               className="basis-full flex justify-center"
             >
-              <Button className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 hover:scale-105 transition-transform duration-200 text-white rounded-full px-6 py-3 text-base font-medium flex items-center gap-2 shadow-md">
+              <Button onClick={()=>searchJobHandler(cat)} className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 hover:scale-105 transition-transform duration-200 text-white rounded-full px-6 py-3 text-base font-medium flex items-center gap-2 shadow-md">
 
 
                 {cat.icon}
