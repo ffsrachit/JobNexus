@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
@@ -20,7 +20,7 @@ const Login = () => {
         password: "",
         role: "",
     })
-    const { loading } = useSelector(store => store.auth);
+    const { loading, user } = useSelector(store => store.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -51,6 +51,11 @@ const Login = () => {
             dispatch(setLoading(false));
         }
     }
+    useEffect(() => {
+        if (user) {
+            navigate("/")
+        }
+    }, [])
     return (
         <div className="min-h-screen bg-gradient-to-b from-white via-blue-100 to-blue-200 font-sans">
 
