@@ -35,7 +35,7 @@ const Navbar = () => {
                 {/* Logo Section */}
                 <div className="group cursor-pointer">
                     <h1 className='text-3xl font-bold text-gray-800 group-hover:scale-105 transition-transform duration-200'>
-                        Job<span className='text-blue-600 bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent'>Nexus</span>
+                        Job<span className='text-blue-600 bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text'>Nexus</span>
                     </h1>
                 </div>
 
