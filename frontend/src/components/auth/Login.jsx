@@ -12,8 +12,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setLoading, setUser } from '@/redux/authSlice'
 import { Loader2 } from 'lucide-react'
 
-
-
 const Login = () => {
     const [input, setInput] = useState({
         email: "",
@@ -39,7 +37,6 @@ const Login = () => {
                 withCredentials: true
             });
             if (res.data.success) {
-
                 dispatch(setUser(res.data.data.user));
                 navigate("/");
                 toast.success(res.data.message);
@@ -51,90 +48,133 @@ const Login = () => {
             dispatch(setLoading(false));
         }
     }
+    
     useEffect(() => {
         if (user) {
             navigate("/")
         }
     }, [])
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-white via-blue-100 to-blue-200 font-sans">
-
-
             <Navbar />
 
-            <div className='flex items-center justify-center max-w-4xl mx-auto my-20'>
-                <form onSubmit={submitHandler} className='w-1/2 border border-gray-200 rounded-4xl p-4 my-10 bg-white shadow-md'>
-                    <h1 className='font-extrabold text-4xl mb-5 w-full text-center mt-2 text-blue-400'>Login</h1>
-                    <h1 className='text-base text-muted-foreground w-full text-center my-4'>
-                        Welcome Back!
-                    </h1>
+            <div className='flex items-center justify-center max-w-5xl mx-auto px-4 py-12'>
+                <div className="w-full max-w-md">
+                    <form 
+                        onSubmit={submitHandler} 
+                        className='w-full bg-white/80 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-2xl shadow-blue-100/50 hover:shadow-3xl transition-all duration-300'
+                    >
+                        {/* Header Section */}
+                        <div className="text-center mb-8">
+                            <h1 className='font-bold text-5xl mb-3 text-blue-500 font-sans'>
+                                Login
+                            </h1>
+                            <p className='text-gray-600 text-lg font-sans'>
+                                Welcome Back!
+                            </p>
+                            <div className="w-16 h-1 bg-blue-500 rounded-full mx-auto mt-3"></div>
+                        </div>
 
-                    <div className="space-y-4 mb-5 flex flex-col items-center">
-                        <Input className='border rounded-xl '
-                            type="email"
-                            value={input.email}
-                            name="email"
-                            onChange={changeEventHandler}
-                            placeholder="Email" />
-
-                        <Input className='border rounded-xl '
-                            type="password"
-                            value={input.password}
-                            name="password"
-                            onChange={changeEventHandler}
-                            placeholder="Password" />
-                    </div>
-
-                    <div className="my-5 ">
-                        <Label className="block mb-2 text-gray-700 mx-1.5 " >Role</Label>
-                        <RadioGroup className='flex items-center gap-4 mx-1.5'>
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    type="radio"
-                                    name="role"
-                                    id="Student"
-                                    value="Student"
-                                    checked={input.role === 'Student'}
+                        {/* Input Fields */}
+                        <div className="space-y-6 mb-8">
+                            <div className="relative group">
+                                <Input 
+                                    className='w-full h-14 px-4 border-2 border-gray-200 rounded-2xl bg-white/50 backdrop-blur-sm transition-all duration-300 focus:border-blue-400 focus:bg-white focus:shadow-lg focus:shadow-blue-100/50 placeholder:text-gray-400 text-gray-700 font-sans'
+                                    type="email"
+                                    value={input.email}
+                                    name="email"
                                     onChange={changeEventHandler}
-                                    className="cursor-pointer accent-blue-500"
+                                    placeholder="Enter your email" 
                                 />
-                                <Label htmlFor="Student">Student</Label>
                             </div>
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    type="radio"
-                                    name="role"
-                                    id="Recruiter"
-                                    value="Recruiter"
-                                    checked={input.role === 'Recruiter'}
+
+                            <div className="relative group">
+                                <Input 
+                                    className='w-full h-14 px-4 border-2 border-gray-200 rounded-2xl bg-white/50 backdrop-blur-sm transition-all duration-300 focus:border-blue-400 focus:bg-white focus:shadow-lg focus:shadow-blue-100/50 placeholder:text-gray-400 text-gray-700 font-sans'
+                                    type="password"
+                                    value={input.password}
+                                    name="password"
                                     onChange={changeEventHandler}
-                                    className="cursor-pointer accent-blue-500"
+                                    placeholder="Enter your password" 
                                 />
-                                <Label htmlFor="Recruiter">Recruiter</Label>
                             </div>
-                        </RadioGroup>
-                    </div>
+                        </div>
 
+                        {/* Role Selection */}
+                        <div className="mb-8">
+                            <Label className="block mb-4 text-gray-700 font-semibold text-lg font-sans">
+                                Select Your Role
+                            </Label>
+                            <RadioGroup className='grid grid-cols-2 gap-4'>
+                                <div className="relative">
+                                    <Input
+                                        type="radio"
+                                        name="role"
+                                        id="Student"
+                                        value="Student"
+                                        checked={input.role === 'Student'}
+                                        onChange={changeEventHandler}
+                                        className="sr-only peer"
+                                    />
+                                    <Label 
+                                        htmlFor="Student"
+                                        className="flex items-center justify-center h-12 px-4 border-2 border-gray-200 rounded-xl bg-white/50 cursor-pointer transition-all duration-300 hover:border-blue-400 hover:bg-blue-50/50 peer-checked:border-blue-400 peer-checked:bg-blue-400 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-blue-200/50 font-sans text-gray-700 peer-checked:font-semibold"
+                                    >
+                                        Student
+                                    </Label>
+                                </div>
+                                <div className="relative">
+                                    <Input
+                                        type="radio"
+                                        name="role"
+                                        id="Recruiter"
+                                        value="Recruiter"
+                                        checked={input.role === 'Recruiter'}
+                                        onChange={changeEventHandler}
+                                        className="sr-only peer"
+                                    />
+                                    <Label 
+                                        htmlFor="Recruiter"
+                                        className="flex items-center justify-center h-12 px-4 border-2 border-gray-200 rounded-xl bg-white/50 cursor-pointer transition-all duration-300 hover:border-blue-400 hover:bg-blue-50/50 peer-checked:border-blue-400 peer-checked:bg-blue-400 peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-blue-200/50 font-sans text-gray-700 peer-checked:font-semibold"
+                                    >
+                                        Recruiter
+                                    </Label>
+                                </div>
+                            </RadioGroup>
+                        </div>
 
-                    {
-                        loading ? <Button className="w-full my-4 ">
-                            <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait
-                        </Button> :
-                            <Button type="submit" className="w-full my-4 rounded-xl">
+                        {/* Submit Button */}
+                        {loading ? 
+                            <Button 
+                                disabled
+                                className="w-full h-14 bg-blue-400 hover:bg-blue-500 text-white font-semibold rounded-2xl shadow-lg shadow-blue-200/50 transition-all duration-300 text-lg font-sans"
+                            >
+                                <Loader2 className='mr-3 h-5 w-5 animate-spin' /> 
+                                Please wait
+                            </Button> :
+                            <Button 
+                                type="submit" 
+                                className="w-full h-14 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-2xl shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/50 transition-all duration-300 transform hover:-translate-y-0.5 text-lg font-sans"
+                            >
                                 Login
                             </Button>
-                    }
+                        }
 
-
-
-
-                    <div className="w-full text-center mt-2 text-sm text-gray-600">
-                        Don't have an account?{' '}
-                        <Link to="/signup" className="text-blue-400 hover:underline">
-                            Signup
-                        </Link>
-                    </div>
-                </form>
+                        {/* Footer Link */}
+                        <div className="text-center mt-8 pt-6 border-t border-gray-100">
+                            <p className="text-gray-600 font-sans">
+                                Don't have an account?{' '}
+                                <Link 
+                                    to="/signup" 
+                                    className="text-blue-400 hover:text-blue-500 font-semibold hover:underline transition-colors duration-300 font-sans"
+                                >
+                                    Signup
+                                </Link>
+                            </p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     )
