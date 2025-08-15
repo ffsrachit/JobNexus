@@ -118,9 +118,12 @@ const logoutUser = asyncHandler(async (req, res) => {
     secure: true,
   };
   return res
-    .status(200)
-    .clearCookie("token", options)
-    .json(new ApiResponse(200, {}, "User logged out"));
+     .status(200)
+    .clearCookie("token", {
+      httpOnly: true,
+      secure: true,      
+      sameSite: "none",  
+    })
 });
 
 const updateProfile = asyncHandler(async (req, res) => {
