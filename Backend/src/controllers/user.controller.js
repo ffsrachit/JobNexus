@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
-
 const registerUser = asyncHandler(async (req, res) => {
   // inputs from the user
   const { fullname, email, phoneNumber, password, role } = req.body;
@@ -20,12 +19,12 @@ const registerUser = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "All fields are required");
   }
-  
+
   const file = req.file;
   const fileUri = getDataUri(file);
 
-  const cloudResponse = await cloudinary.uploader.upload(fileUri.content , {
-    resource_type:"auto"
+  const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+    resource_type: "auto",
   });
 
   // check if user is already exist
@@ -48,9 +47,9 @@ const registerUser = asyncHandler(async (req, res) => {
     phoneNumber,
     password: hashedPassword,
     role,
-    profile:{
-      profilePhoto:cloudResponse.secure_url,
-    }
+    profile: {
+      profilePhoto: cloudResponse.secure_url,
+    },
   });
 
   // storing in this but without password as this will be returned in response
@@ -107,7 +106,8 @@ const loginUser = asyncHandler(async (req, res) => {
     .cookie("token", token, {
       maxAge: 1 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      sameSite: "strict",
+      secure: true, // required for HTTPS
+      sameSite: "none", // allow cross-site cookie
     })
     .json(new ApiResponse(200, { user: loggedinUser }, "Welcome Back !"));
 });
@@ -125,12 +125,12 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const updateProfile = asyncHandler(async (req, res) => {
   const { fullname, email, phoneNumber, bio, skills } = req.body;
-  
+
   const file = req.file;
 
   const fileUri = getDataUri(file);
-  const cloudResponse = await cloudinary.uploader.upload(fileUri.content,{
-     resource_type : "auto"
+  const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+    resource_type: "auto",
   });
   const userId = req.id;
 
@@ -140,15 +140,15 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (email) updateData.email = email;
   if (phoneNumber) updateData.phoneNumber = phoneNumber;
   if (bio) updateData["profile.bio"] = bio;
-  if (skills) updateData["profile.skills"] = skills.split(",").map(skill => skill.trim());
+  if (skills)
+    updateData["profile.skills"] = skills
+      .split(",")
+      .map((skill) => skill.trim());
 
-   if(cloudResponse){
-    updateData["profile.resume"] = cloudResponse.secure_url            // save the cloudinary url
-    updateData["profile.resumeOriginalname"] = file.originalname // save the original file name 
-
-   }
- 
-
+  if (cloudResponse) {
+    updateData["profile.resume"] = cloudResponse.secure_url; // save the cloudinary url
+    updateData["profile.resumeOriginalname"] = file.originalname; // save the original file name
+  }
 
   // If no valid fields provided
   if (Object.keys(updateData).length === 0) {
