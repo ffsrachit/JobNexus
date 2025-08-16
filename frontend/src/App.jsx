@@ -15,6 +15,8 @@ import AdminJobs from './components/admin/AdminJobs'
 import PostJob from './components/admin/PostJob'
 import Applicants from './components/admin/Applicants'
 import ProtectedRoute from './components/admin/ProtectRoute'
+import Lenis from 'lenis'
+import { useEffect } from 'react'
 
 const appRouter = createBrowserRouter([
   {
@@ -75,6 +77,18 @@ const appRouter = createBrowserRouter([
 
 function App() {
 
+  useEffect(() => {
+    // Initialize Lenis
+    const lenis = new Lenis();
+
+    // Use requestAnimationFrame to continuously update the scroll
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+  })
   return (
     <>
 
