@@ -44,7 +44,6 @@ const JobDescription = () => {
                 console.log("API Response:", res.data);
 
                 if (res.data.success) {
-
                     const jobData = res.data.data || res.data.job;
                     dispatch(setSingleJob(jobData));
                     setIsApplied(jobData.application?.some(application => application.applicant === user?._id) || false);
@@ -59,92 +58,110 @@ const JobDescription = () => {
         fetchSingleJob();
     }, [jobId, dispatch, user?._id]);
 
-
     return (
-        <div className='max-w-5xl mx-auto my-10 px-4'>
-
-            {/* Job Title and Apply Button */}
-            <div className='flex items-center justify-between bg-gradient-to-r from-blue-50 via-blue-100 to-purple-50 p-6 rounded-xl shadow-md'>
-                <div>
-                    <h1 className='font-bold text-xl text-gray-800'>{singleJob?.title}</h1>
-                    <div className='flex flex-wrap items-center gap-3 mt-5'>
-                        <Badge className='bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full'>
-                            {singleJob?.position} Position
-                        </Badge>
-                        <Badge className='bg-red-100 text-red-500 font-semibold px-3 py-1 rounded-full'>
-                            {singleJob?.jobType}
-                        </Badge>
-                        <Badge className='bg-purple-100 text-purple-500 font-semibold px-3 py-1 rounded-full'>
-                            {Math.round(singleJob?.salary / 100000)} LPA
-                        </Badge>
+        <div className='max-w-6xl mx-auto my-12 px-4'>
+            {/* Header Section */}
+            <div className='bg-gradient-to-r from-blue-50 to-indigo-100 p-8 rounded-3xl shadow-lg border border-blue-200/50 mb-8'>
+                <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6'>
+                    <div>
+                        <h1 className='font-bold text-3xl text-gray-900 mb-3'>{singleJob?.title}</h1>
+                        <p className='text-gray-600 text-lg mb-4'>{singleJob?.company?.name} • {singleJob?.location}</p>
+                        
+                        <div className='flex flex-wrap items-center gap-3'>
+                            <Badge className='bg-blue-600 text-white px-4 py-2 rounded-full font-medium'>
+                                {singleJob?.position} Position{singleJob?.position > 1 ? 's' : ''}
+                            </Badge>
+                            <Badge className='bg-green-600 text-white px-4 py-2 rounded-full font-medium'>
+                                {singleJob?.jobType}
+                            </Badge>
+                            <Badge className='bg-purple-600 text-white px-4 py-2 rounded-full font-medium'>
+                                ₹{Math.round(singleJob?.salary / 100000)} LPA
+                            </Badge>
+                        </div>
                     </div>
-                </div>
 
-                <Button
-                    onClick={isApplied ? null : applyJobHandler}
-                    disabled={isApplied}
-                    className={`rounded-3xl px-6 py-2 font-semibold transition-all duration-300 transform
-                    ${isApplied
-                            ? 'bg-blue-200 text-blue-600 cursor-not-allowed'
-                            : 'text-white bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-purple-600 hover:scale-105'
+                    <Button
+                        onClick={isApplied ? null : applyJobHandler}
+                        disabled={isApplied}
+                        className={`px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 min-w-[160px]
+                        ${isApplied
+                            ? 'bg-gray-400 text-white cursor-not-allowed'
+                            : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl hover:scale-105'
                         }`}
-                >
-                    {isApplied ? 'Already Applied' : 'Apply Now'}
-                </Button>
+                    >
+                        {isApplied ? 'Already Applied' : 'Apply Now'}
+                    </Button>
+                </div>
             </div>
 
-            {/* Job Details Section */}
-            <div className="mt-10">
-                <h1 className="text-2xl font-bold text-blue-600 mb-6 border-b pb-2 border-gray-300">
-                    Job Details
-                </h1>
-
-                <div className="space-y-4 text-gray-800">
-                    <div>
-                        <h2 className="font-bold inline">Role:</h2>
-                        <span className="pl-4 font-normal">{singleJob?.title}</span>
-                    </div>
-
-                    <div>
-                        <h2 className="font-bold inline">Location:</h2>
-                        <span className="pl-4 font-normal">{singleJob?.location}</span>
-                    </div>
-
-                    <div>
-                        <h2 className="font-bold inline">Description:</h2>
-                        <span className="pl-4 font-normal">
+            {/* Content Grid */}
+            <div className="grid lg:grid-cols-3 gap-8">
+                {/* Main Content */}
+                <div className="lg:col-span-2 space-y-8">
+                    {/* Job Description */}
+                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Job Description</h2>
+                        <p className="text-gray-700 leading-relaxed text-lg">
                             {singleJob?.description}
-                        </span>
+                        </p>
                     </div>
 
-                    <div>
-                        <h2 className="font-bold inline">Experience:</h2>
-                        <span className="pl-4 font-normal">{singleJob?.experienceLevel}</span>
-                    </div>
-
-                    <div>
-                        <h2 className="font-bold inline">Salary:</h2>
-                        <span className="pl-4 font-normal">{Math.round(singleJob?.salary / 100000)} LPA</span>
-                    </div>
-
-                    <div>
-                        <h2 className="font-bold inline">Total Applicants:</h2>
-                        <span className="pl-4 font-normal">{singleJob?.application?.length}</span>
-                    </div>
-
-                    <div>
-                        <h2 className="font-bold inline">Posted Date:</h2>
-                        <span className="pl-4 font-normal">{singleJob?.createdAt?.split("T")[0]}</span>
+                    {/* Job Details */}
+                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Job Details</h2>
+                        
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Role</h3>
+                                    <p className="text-gray-700">{singleJob?.title}</p>
+                                </div>
+                                
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Location</h3>
+                                    <p className="text-gray-700">{singleJob?.location}</p>
+                                </div>
+                                
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Experience</h3>
+                                    <p className="text-gray-700">{singleJob?.experienceLevel}</p>
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Salary</h3>
+                                    <p className="text-gray-700">₹{Math.round(singleJob?.salary / 100000)} LPA</p>
+                                </div>
+                                
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Total Applicants</h3>
+                                    <p className="text-gray-700">{singleJob?.application?.length}</p>
+                                </div>
+                                
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Posted Date</h3>
+                                    <p className="text-gray-700">{singleJob?.createdAt?.split("T")[0]}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Requirements Section */}
-                <div className="mt-6">
-                    <h2 className="font-bold text-lg mb-2 text-blue-600">Requirements:</h2>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1">{singleJob?.requirements?.map((req, i) => (
-                        <li key={i}>{req}</li>
-                    ))}
-                    </ul>
+                {/* Requirements Sidebar */}
+                <div className="lg:col-span-1">
+                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 sticky top-8">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Requirements</h2>
+                        
+                        <div className="space-y-3">
+                            {singleJob?.requirements?.map((req, index) => (
+                                <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                                    <span className="text-gray-700">{req}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
